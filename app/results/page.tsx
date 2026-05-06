@@ -2,6 +2,19 @@
 
 import { supabase } from "@/lib/supabase";
 import { useEffect, useState } from "react";
+import toast from "react-hot-toast";
+
+import jsPDF from "jspdf";
+
+
+import {
+  BarChart,
+  Bar,
+  XAxis,
+  YAxis,
+  Tooltip,
+  ResponsiveContainer,
+} from "recharts";
 
 export default function ResultsPage() {
 const [data, setData] = useState<{
@@ -23,9 +36,11 @@ const [data, setData] = useState<{
   }
 }, []);
 
+
+
   const saveLead = async () => {
     if (!email) {
-      alert("Please enter email");
+      toast.error("Please enter email");
       return;
     }
 
@@ -38,18 +53,24 @@ const [data, setData] = useState<{
       ]);
 
     if (error) {
-      alert("Something went wrong");
+      toast.error("Something went wrong");
       console.log(error);
     } else {
-      alert("Report saved successfully!");
+      toast.success("Report saved successfully!");
     }
   };
 
   if (!data) {
     return (
-      <div className="min-h-screen bg-black text-white flex items-center justify-center text-2xl">
-        Loading...
-      </div>
+      <div className="flex flex-col items-center gap-6">
+
+  <div className="w-16 h-16 border-4 border-green-400 border-t-transparent rounded-full animate-spin" />
+
+  <p className="text-2xl font-semibold text-gray-300">
+    Generating AI Audit...
+  </p>
+
+</div>
     );
   }
 let savings = 0;
@@ -192,6 +213,44 @@ if (data.tool === "Copilot") {
 
 yearlySavings = savings * 12;
 
+const chartData = [
+  {
+    name: "Monthly",
+    savings: savings,
+  },
+  {
+    name: "Yearly",
+    savings: yearlySavings,
+  },
+];
+
+const downloadPDF = () => {
+
+  const pdf = new jsPDF();
+
+  pdf.setFontSize(24);
+
+  pdf.text("Credex AI Spend Audit", 20, 20);
+
+  pdf.setFontSize(16);
+
+  pdf.text(`Tool: ${data.tool}`, 20, 50);
+
+  pdf.text(`Monthly Savings: $${savings}`, 20, 70);
+
+  pdf.text(`Yearly Savings: $${yearlySavings}`, 20, 90);
+
+  pdf.text("Recommendation:", 20, 120);
+
+  pdf.setFontSize(12);
+
+  pdf.text(recommendation, 20, 140, {
+    maxWidth: 160,
+  });
+
+  pdf.save("credex-audit-report.pdf");
+};
+
   return (
     <main className="relative min-h-screen overflow-hidden bg-black text-white px-6 py-10">
 
@@ -226,7 +285,10 @@ yearlySavings = savings * 12;
         </div>
 
         {/* Card */}
-        <div className="mt-14 border border-gray-800 bg-gray-950/70 backdrop-blur-2xl shadow-2xl rounded-[32px] p-8 md:p-12">
+        <div
+  id="report"
+  className="mt-14 border border-gray-800 bg-gray-950/70 backdrop-blur-2xl shadow-2xl rounded-[32px] p-8 md:p-12"
+>
 
           {/* Tool */}
           <div>
@@ -259,7 +321,7 @@ yearlySavings = savings * 12;
           {/* Stats */}
           <div className="mt-14 grid grid-cols-1 md:grid-cols-2 gap-6">
 
-            <div className="border border-gray-800 bg-black/40 rounded-3xl p-8">
+            <div className="border border-gray-800 bg-black/40 rounded-3xl p-8 hover:scale-[1.02] hover:border-green-400/40 transition duration-300">
               <p className="text-gray-400">
                 Estimated Monthly Savings
               </p>
@@ -269,7 +331,7 @@ yearlySavings = savings * 12;
               </h3>
             </div>
 
-            <div className="border border-gray-800 bg-black/40 rounded-3xl p-8">
+            <div className="border border-gray-800 bg-black/40 rounded-3xl p-8 hover:scale-[1.02] hover:border-blue-400/40 transition duration-300">
               <p className="text-gray-400">
                 Estimated Annual Savings
               </p>
@@ -280,6 +342,66 @@ yearlySavings = savings * 12;
             </div>
 
           </div>
+
+          {/* Savings Chart */}
+<div className="mt-14">
+
+  <p className="text-gray-400 uppercase tracking-widest text-sm mb-6">
+    Savings Visualization
+  </p>
+
+  <div className="border border-gray-800 bg-gradient-to-br from-gray-950 via-gray-900 to-black rounded-3xl p-6 h-96 shadow-2xl">
+
+    <ResponsiveContainer width="100%" height="100%">
+
+      <BarChart data={chartData}>
+
+        <XAxis
+          dataKey="name"
+          stroke="#9CA3AF"
+          tick={{ fill: "#D1D5DB", fontSize: 14 }}
+        />
+
+        <YAxis
+          stroke="#9CA3AF"
+          tick={{ fill: "#D1D5DB", fontSize: 14 }}
+        />
+
+        <Tooltip
+          contentStyle={{
+            backgroundColor: "#111827",
+            border: "1px solid #374151",
+            borderRadius: "16px",
+            color: "#fff",
+          }}
+        />
+
+        <Bar
+          dataKey="savings"
+          fill="url(#colorGradient)"
+          radius={[14, 14, 0, 0]}
+        />
+
+        <defs>
+          <linearGradient
+            id="colorGradient"
+            x1="0"
+            y1="0"
+            x2="0"
+            y2="1"
+          >
+            <stop offset="0%" stopColor="#4ADE80" />
+            <stop offset="100%" stopColor="#3B82F6" />
+          </linearGradient>
+        </defs>
+
+      </BarChart>
+
+    </ResponsiveContainer>
+
+  </div>
+
+</div>
 
           {/* Recommendation */}
           <div className="mt-14">
@@ -321,6 +443,13 @@ yearlySavings = savings * 12;
             </div>
 
           </div>
+
+          <button
+  onClick={downloadPDF}
+  className="mt-14 w-full bg-gradient-to-r from-purple-500 to-pink-500 text-white py-5 rounded-2xl text-lg font-black hover:scale-[1.02] transition duration-300 shadow-2xl"
+>
+  Download PDF Report
+</button>
 
           {/* Email */}
           <div className="mt-14">

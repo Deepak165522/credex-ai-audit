@@ -1,4 +1,8 @@
+"use client";
+
 import Link from "next/link";
+
+import { motion } from "framer-motion";
 
 export default function Home() {
   return (
@@ -21,15 +25,20 @@ export default function Home() {
         </div>
 
         {/* Heading */}
-        <h1 className="mt-8 text-5xl sm:text-6xl md:text-8xl font-black leading-tight max-w-6xl">
+        <motion.h1
+  initial={{ opacity: 0, y: 40 }}
+  animate={{ opacity: 1, y: 0 }}
+  transition={{ duration: 0.8 }}
+  className="mt-8 text-5xl sm:text-6xl md:text-8xl font-black leading-tight max-w-6xl"
+>
 
-          Stop Overpaying
+  Stop Overpaying
 
-          <span className="block bg-gradient-to-r from-green-400 via-blue-400 to-purple-400 bg-clip-text text-transparent">
-            For AI Tools
-          </span>
+  <span className="block bg-gradient-to-r from-green-400 via-blue-400 to-purple-400 bg-clip-text text-transparent">
+    For AI Tools
+  </span>
 
-        </h1>
+</motion.h1>
 
         {/* Subtitle */}
         <p className="mt-8 text-gray-400 text-base sm:text-lg md:text-xl max-w-3xl leading-8 md:leading-10">
@@ -40,7 +49,12 @@ export default function Home() {
         </p>
 
         {/* Buttons */}
-        <div className="mt-10 flex flex-col sm:flex-row gap-4">
+        <motion.div
+  initial={{ opacity: 0, y: 20 }}
+  animate={{ opacity: 1, y: 0 }}
+  transition={{ delay: 0.3, duration: 0.8 }}
+  className="mt-10 flex flex-col sm:flex-row gap-4"
+>
 
           <Link
             href="/audit"
@@ -56,7 +70,7 @@ export default function Home() {
   View Demo
 </a>
 
-        </div>
+        </motion.div>
 
         {/* Stats */}
         <div className="mt-20 grid grid-cols-1 md:grid-cols-3 gap-6 max-w-6xl w-full">
@@ -177,6 +191,12 @@ export default function Home() {
         </div>
 
       </section>
+
+      <footer className="relative z-10 border-t border-gray-800 py-10 text-center text-gray-500 text-sm">
+
+  Built by Deepak Kumar • Credex AI Spend Audit • 2026
+
+</footer>
 
     </main>
   );

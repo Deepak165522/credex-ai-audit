@@ -9,19 +9,25 @@ export default function AuditPage() {
   const [tool, setTool] = useState("");
   const [plan, setPlan] = useState("");
   const [spend, setSpend] = useState("");
+  const [loading, setLoading] = useState(false);
 
-  const handleAudit = () => {
-    localStorage.setItem(
-      "auditData",
-      JSON.stringify({
-        tool,
-        plan,
-        spend,
-      })
-    );
+ const handleAudit = () => {
 
+  setLoading(true);
+
+  localStorage.setItem(
+    "auditData",
+    JSON.stringify({
+      tool,
+      plan,
+      spend,
+    })
+  );
+
+  setTimeout(() => {
     router.push("/results");
-  };
+  }, 1200);
+};
 
   return (
     <main className="relative min-h-screen overflow-hidden bg-black text-white px-6 py-10">
@@ -125,11 +131,11 @@ export default function AuditPage() {
 
             {/* Button */}
             <button
-              onClick={handleAudit}
-              className="mt-4 bg-gradient-to-r from-green-400 to-blue-500 text-black py-5 rounded-2xl text-lg font-black hover:scale-[1.02] transition duration-300 shadow-2xl"
-            >
-              Generate Free Audit
-            </button>
+  onClick={handleAudit}
+  className="mt-4 bg-gradient-to-r from-green-400 to-blue-500 text-black py-5 rounded-2xl text-lg font-black hover:scale-[1.02] transition duration-300 shadow-2xl"
+>
+  {loading ? "Generating Audit..." : "Generate Free Audit"}
+</button>
 
           </div>
 
