@@ -12,12 +12,16 @@ const [data, setData] = useState<{
   const [email, setEmail] = useState("");
 
   useEffect(() => {
-    const stored = localStorage.getItem("auditData");
+  const stored = localStorage.getItem("auditData");
 
-    if (stored) {
-      setData(JSON.parse(stored));
-    }
-  }, []);
+  if (stored) {
+    const parsedData = JSON.parse(stored);
+
+    setTimeout(() => {
+      setData(parsedData);
+    }, 0);
+  }
+}, []);
 
   const saveLead = async () => {
     if (!email) {
