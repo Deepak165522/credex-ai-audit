@@ -8,7 +8,7 @@ The platform provides personalized savings recommendations, annual/monthly cost 
 
 # Live Demo
 
-https://credex-ai-audit.vercel.app/
+[Open Live App](https://credex-ai-audit.vercel.app/)
 
 ---
 
@@ -42,9 +42,13 @@ https://credex-ai-audit.vercel.app/
 
 ![Landing Page](./screenshots/landing.png)
 
+---
+
 ## Audit Form
 
 ![Audit Form](./screenshots/audit.png)
+
+---
 
 ## Results Dashboard
 
