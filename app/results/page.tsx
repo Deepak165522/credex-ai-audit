@@ -4,7 +4,11 @@ import { supabase } from "@/lib/supabase";
 import { useEffect, useState } from "react";
 
 export default function ResultsPage() {
-  const [data, setData] = useState<any>(null);
+const [data, setData] = useState<{
+  tool: string;
+  plan: string;
+  spend: string;
+} | null>(null);
   const [email, setEmail] = useState("");
 
   useEffect(() => {
