@@ -1,3 +1,5 @@
+# ARCHITECTURE.md
+
 # Architecture Overview
 
 ## System Architecture
@@ -9,19 +11,33 @@ A[User Opens Website] --> B[Landing Page]
 
 B --> C[Audit Form]
 
-C --> D[Local Storage Save]
+C --> D[Persist Form State in localStorage]
 
-D --> E[Results Engine]
+D --> E[Audit Recommendation Engine]
 
-E --> F[Savings Calculation]
+E --> F[Pricing & Savings Calculation]
 
 F --> G[AI Summary Generation]
 
-G --> H[Results Dashboard]
+G --> H{AI API Available?}
 
-H --> I[Save Report]
+H -->|Yes| I[Personalized AI Summary]
 
-I --> J[Supabase Database]
+H -->|No| J[Fallback Summary Template]
+
+I --> K[Results Dashboard]
+
+J --> K
+
+K --> L[Generate Shareable Report URL]
+
+K --> M[PDF Export]
+
+K --> N[Lead Capture Form]
+
+N --> O[Supabase Database]
+
+N --> P[Transactional Email Service]
 ```
 
 ---
@@ -31,26 +47,58 @@ I --> J[Supabase Database]
 1. Users land on the homepage and start the AI spend audit process.
 
 2. The audit form collects:
-   - AI tool
-   - Current subscription plan
-   - Monthly spend
 
-3. User input is stored temporarily in browser localStorage.
+   * AI tool selections
+   * Current subscription plans
+   * Monthly spend estimates
+   * Team usage details
 
-4. The results engine evaluates:
-   - Potential overspending
-   - Better pricing options
-   - Annual savings opportunities
+3. Form state is persisted using browser localStorage to improve user experience and prevent accidental data loss on page reloads.
 
-5. The platform generates:
-   - Monthly savings
-   - Annual savings
-   - Personalized recommendations
-   - AI-generated summary
+4. The audit recommendation engine evaluates:
 
-6. Users can save reports using email capture functionality.
+   * Whether the selected plan fits the team size and use case
+   * Potential overpayment scenarios
+   * Alternative lower-cost plans
+   * Opportunities to reduce AI infrastructure spending
 
-7. Leads are stored securely in Supabase.
+5. The pricing engine calculates:
+
+   * Estimated monthly savings
+   * Estimated annual savings
+   * Optimization opportunities
+   * Financially practical recommendations
+
+6. The application then attempts to generate an AI-powered personalized audit summary.
+
+7. If the AI API fails or is unavailable, the application gracefully falls back to a predefined summary template.
+
+8. The results dashboard displays:
+
+   * Total savings
+   * Per-tool recommendations
+   * AI-generated summary
+   * Savings visualization charts
+   * PDF export functionality
+
+9. Users can optionally save their report by entering their email address.
+
+10. Lead information is securely stored in Supabase for future follow-up and analysis.
+
+---
+
+# Shareable Report URLs
+
+Each completed audit can generate a shareable public URL that displays anonymized audit results without exposing sensitive user information such as email addresses or company names.
+
+The public report includes:
+
+* Tool selections
+* Savings calculations
+* Optimization recommendations
+* Open Graph metadata for social sharing previews
+
+This creates a lightweight viral loop while preserving user privacy.
 
 ---
 
@@ -59,74 +107,102 @@ I --> J[Supabase Database]
 ## Next.js
 
 Chosen for:
-- Fast performance
-- Server-side rendering support
-- Excellent developer experience
-- Easy Vercel deployment
+
+* Fast rendering performance
+* Built-in routing system
+* Excellent developer experience
+* Easy deployment on Vercel
+* Support for scalable SaaS applications
 
 ## TypeScript
 
 Chosen for:
-- Type safety
-- Better scalability
-- Improved developer productivity
-- Reduced runtime errors
+
+* Type safety
+* Better maintainability
+* Improved developer productivity
+* Reduced runtime bugs
+* Safer frontend state handling
 
 ## Tailwind CSS
 
 Chosen for:
-- Rapid UI development
-- Responsive design
-- Utility-first styling
-- Clean modern SaaS interfaces
+
+* Rapid UI development
+* Responsive design capabilities
+* Utility-first styling workflow
+* Easier visual consistency
+* Fast iteration during development
 
 ## Supabase
 
 Chosen for:
-- Fast backend setup
-- PostgreSQL database support
-- Easy API integration
-- Scalable infrastructure
+
+* Managed PostgreSQL database
+* Easy API integration
+* Rapid backend setup
+* Authentication and scalability support
+* Strong developer experience
+
+## Recharts
+
+Chosen for:
+
+* Lightweight chart rendering
+* Responsive visualizations
+* Easy React integration
+* Suitable for SaaS dashboards
 
 ## Vercel
 
 Chosen for:
-- Seamless Next.js deployment
-- Fast global CDN
-- Easy CI/CD workflow
-- Excellent developer experience
+
+* Seamless Next.js deployment
+* Built-in CI/CD workflows
+* Global CDN support
+* Fast deployment iterations
+* Excellent frontend hosting experience
 
 ---
 
 # Scalability Improvements
 
-If the application needed to support 10,000+ audits per day:
+If the platform needed to support 10,000+ audits per day, the following improvements would be implemented:
 
-- Move recommendation logic into dedicated backend APIs
-- Add Redis caching for repeated calculations
-- Implement authentication and user accounts
-- Add rate limiting and abuse prevention
-- Store analytics and audit history
-- Introduce background queues for AI generation
-- Optimize database indexing and queries
-- Add monitoring and logging infrastructure
+* Move audit logic into dedicated backend APIs
+* Add Redis caching for repeated calculations
+* Introduce background queues for AI summary generation
+* Add rate limiting and abuse prevention
+* Implement authentication and organization accounts
+* Store audit history and analytics
+* Optimize database indexing and query performance
+* Add monitoring, alerting, and observability tooling
+* Move AI generation workloads to asynchronous processing
 
 ---
 
 # Security Considerations
 
-- Environment variables are used for API keys
-- Supabase handles database infrastructure
-- No sensitive user data is exposed publicly
-- Form validation prevents invalid submissions
+* Environment variables are used for API keys and secrets
+* Supabase manages secure database infrastructure
+* No sensitive user information is exposed publicly
+* Public shareable URLs intentionally exclude personally identifiable information
+* Input validation prevents invalid or malformed submissions
+* Audit calculations are deterministic and transparent
+* Fallback summaries ensure graceful degradation if AI APIs fail
 
 ---
 
 # Future Architecture Enhancements
 
-- AI-powered recommendation engine
-- Shareable public audit URLs
-- PDF report generation
-- Team-based dashboards
-- Multi-tool comparative analysis
-- Real-time analytics tracking
+Potential future improvements include:
+
+* Real-time AI API integrations
+* Benchmark comparisons across startup sizes
+* Multi-user organization dashboards
+* Advanced analytics and reporting
+* Shareable public audit leaderboards
+* Role-based access controls
+* API usage ingestion from vendors
+* Scheduled recurring audits
+* Deeper AI-powered optimization recommendations

@@ -62,3 +62,30 @@ If expanded further, future prompt versions would:
 - Generate role-specific optimization advice
 - Adapt recommendations based on API usage patterns
 - Generate multiple summary styles dynamically
+
+
+
+---
+
+# Fallback Handling
+
+If the AI summary generation fails due to API issues, timeout errors, or invalid responses, the application falls back to a predefined templated summary to ensure the audit experience remains uninterrupted.
+
+Fallback summary example:
+
+> “Your current AI tooling setup appears to include higher-tier plans that may not fully match your team size and usage requirements. Optimizing your subscriptions could reduce unnecessary monthly spending while maintaining similar productivity and workflow efficiency.”
+
+---
+
+# Why AI Was Used Only For Summaries
+
+The audit calculations themselves were intentionally implemented using deterministic hardcoded business logic rather than AI-generated reasoning.
+
+This decision improves:
+
+* Pricing accuracy
+* Explainability
+* Consistency
+* Predictable savings calculations
+
+The LLM is used only for generating natural-language summaries and improving readability for non-technical users.
